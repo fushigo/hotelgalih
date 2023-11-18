@@ -4,7 +4,10 @@
  */
 package Auth;
 
-import java.awt.HeadlessException;
+import Database.Config;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -121,10 +124,30 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogActionPerformed
+        String username = txtUsername.getText();
+        String password = String.valueOf(txtPassword.getPassword());
+        String sql = "SELECT * FROM user WHERE username = ? AND password = ?";
+        
         try{
-            
-        }catch(HeadlessException | SQLException e){
-            System.out.println(e);
+            Connection conn = Config.configDB();
+            PreparedStatement pstm = conn.prepareStatement(sql);
+        
+            pstm.setString(1, username);
+            pstm.setString(2, password);
+        
+            try{
+                ResultSet resultSet = pstm.executeQuery();
+                if (resultSet.next()) {
+                    System.out.println("Login successful");
+                } else {
+                    // Login failed
+                    System.out.println("Login failed");
+                }
+            }catch(SQLException e){
+                System.out.println("Terjadi error saat login" + e);
+            }
+        }catch(SQLException e){
+            System.out.println("Tercaji error saat mengambil data " + e);
         }
     }//GEN-LAST:event_btnLogActionPerformed
 
