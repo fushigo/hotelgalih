@@ -4,6 +4,7 @@
  */
 package Auth;
 
+import Dashboard.admin;
 import Database.Config;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,10 +16,9 @@ import java.sql.SQLException;
  * @author USER
  */
 public class Login extends javax.swing.JFrame {
-
     /**
      * Creates new form Login
-     */
+     */    
     public Login() {
         initComponents();
     }
@@ -138,7 +138,14 @@ public class Login extends javax.swing.JFrame {
             try{
                 ResultSet resultSet = pstm.executeQuery();
                 if (resultSet.next()) {
-                    System.out.println("Login successful");
+                    String userLevel = resultSet.getString("level");
+                    if("admin".equals(userLevel)){
+                        this.dispose();
+                        admin adm = new admin(username, userLevel);
+                        adm.setVisible(true);
+                    }else if("user".equals(userLevel)){
+                        System.out.println("Login berhasil sebagai: " + userLevel);
+                    }
                 } else {
                     // Login failed
                     System.out.println("Login failed");
