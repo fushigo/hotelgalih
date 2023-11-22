@@ -7,10 +7,12 @@ package Dashboard;
 import Database.Config;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,9 +22,10 @@ public class admin extends javax.swing.JFrame {
 
     private String username;
     private String userLevel;
-    
+
     /**
      * Creates new form admin
+     *
      * @param username
      * @param userLevel
      */
@@ -32,10 +35,79 @@ public class admin extends javax.swing.JFrame {
         this.userLevel = userLevel;
     }
 
+    public void resetForm(){
+        txtKode.setText("");
+        selectTipe.setSelectedItem(null);
+        selectKelas.setSelectedItem(null);
+        txtNama.setText("");
+        txtHarga.setText("");
+    }
+    
+    private void showData(){
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Kode");
+        model.addColumn("Tipe");
+        model.addColumn("Kelas");
+        model.addColumn("Nama");
+        model.addColumn("Harga");
+        
+        try{
+            int no = 1;
+            String sql = "SELECT * FROM kamar";
+            java.sql.Connection conn = (Connection)Config.configDB();
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet res = stm.executeQuery(sql);
+            
+            while(res.next()){
+                model.addRow(new Object[] {res.getString(1), res.getString(2), res.getString(3),
+                res.getString(4), res.getString(5)});
+            }
+            tableData.setModel(model);
+        }catch (SQLException e){
+            System.out.println("Error" + e.getMessage());
+        }
+    }
+    
+    public void countUser(){
+        String sql = "SELECT COUNT(*) FROM user";
+        
+        try{
+            Connection conn = Config.configDB();
+            PreparedStatement pstm = conn.prepareStatement(sql);
+            ResultSet result = pstm.executeQuery();
+            
+            if(result.next()){
+                int count = result.getInt(1);
+                String hasil = String.valueOf(count);
+                lblJUser.setText(hasil);
+            }
+        }catch(SQLException e){
+            System.out.println("Terjadi masalah saat menghitung data: " + e);
+        }
+    }
+    
+    public void countKamar(){
+        String sql = "SELECT COUNT(*) FROM kamar";
+        
+        try{
+            Connection conn = Config.configDB();
+            PreparedStatement pstm = conn.prepareStatement(sql);
+            ResultSet result = pstm.executeQuery();
+            
+            if(result.next()){
+                int count = result.getInt(1);
+                String hasil = String.valueOf(count);
+                lblJKamar.setText(hasil);
+            }
+        }catch(SQLException e){
+            System.out.println("Terjadi masalah saat menghitung data: " + e);
+        }
+    }
+    
     private admin() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -49,6 +121,12 @@ public class admin extends javax.swing.JFrame {
         lblUser = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        lblJKamar = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        lblJUser = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         txtKode = new javax.swing.JTextField();
@@ -67,6 +145,7 @@ public class admin extends javax.swing.JFrame {
         rSMaterialButtonRectangle4 = new rojerusan.RSMaterialButtonRectangle();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -81,15 +160,85 @@ public class admin extends javax.swing.JFrame {
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
 
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel7.setText("JUMLAH KAMAR");
+
+        lblJKamar.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 18)); // NOI18N
+        lblJKamar.setText("0");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addGap(18, 18, 18))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addComponent(lblJKamar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7)
+                .addGap(18, 18, 18)
+                .addComponent(lblJKamar)
+                .addContainerGap(44, Short.MAX_VALUE))
+        );
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel9.setText("JUMLAH PENGGUNA");
+
+        lblJUser.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 18)); // NOI18N
+        lblJUser.setText("0");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap(21, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(lblJUser, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(56, 56, 56))))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel9)
+                .addGap(18, 18, 18)
+                .addComponent(lblJUser)
+                .addContainerGap(44, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 680, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(83, 83, 83)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(329, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 498, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 398, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("General", jPanel1);
@@ -121,6 +270,11 @@ public class admin extends javax.swing.JFrame {
                 "kode_kamar", "tipe", "kelas", "nama", "harga"
             }
         ));
+        tableData.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableDataMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tableData);
 
         rSMaterialButtonRectangle1.setText("CREATE");
@@ -131,8 +285,18 @@ public class admin extends javax.swing.JFrame {
         });
 
         rSMaterialButtonRectangle2.setText("UPDATE");
+        rSMaterialButtonRectangle2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rSMaterialButtonRectangle2ActionPerformed(evt);
+            }
+        });
 
         rSMaterialButtonRectangle4.setText("DELETE");
+        rSMaterialButtonRectangle4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rSMaterialButtonRectangle4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -162,7 +326,7 @@ public class admin extends javax.swing.JFrame {
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel5)
                                     .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
                                     .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -234,6 +398,9 @@ public class admin extends javax.swing.JFrame {
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         lblUser.setText("Hai, " + username);
+        showData();
+        countUser();
+        countKamar();
     }//GEN-LAST:event_formWindowActivated
 
     private void rSMaterialButtonRectangle1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSMaterialButtonRectangle1ActionPerformed
@@ -242,22 +409,73 @@ public class admin extends javax.swing.JFrame {
         String kelas = selectKelas.getSelectedItem().toString();
         String nama = txtNama.getText();
         String harga = txtHarga.getText();
-        
-        String sql = "INSERT INTO kamar (kode, tipe, kelas, nama, harga) VALUES ('"+kode+"', '')";
-        
+
+        String sql = "INSERT INTO kamar (kode, tipe, kelas, nama, harga) VALUES ('" + kode + "','" + tipe + "','" + kelas + "','" + nama + "','" + harga + "')";
+
         try {
             Connection conn = Config.configDB();
             PreparedStatement pstm = conn.prepareStatement(sql);
-            ResultSet resultSet = pstm.executeQuery();
-            
-            System.out.println(resultSet);
+            pstm.execute();
+            JOptionPane.showMessageDialog(null, "Data kamar berhasil ditambahkan");
+            resetForm();
         } catch (SQLException ex) {
             Logger.getLogger(admin.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
+
+
     }//GEN-LAST:event_rSMaterialButtonRectangle1ActionPerformed
+
+    private void rSMaterialButtonRectangle2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSMaterialButtonRectangle2ActionPerformed
+        String kode = txtKode.getText();
+        String tipe = selectTipe.getSelectedItem().toString();
+        String kelas = selectKelas.getSelectedItem().toString();
+        String nama = txtNama.getText();
+        String harga = txtHarga.getText();
+        
+        String sql = "UPDATE kamar SET kode='"+kode+"', tipe='"+tipe+"', kelas='"+kelas
+                +"', nama='"+nama+"', harga='"+harga+"' WHERE kode='"+kode+"'";
+        
+        
+        try{
+            Connection conn = Config.configDB();
+            PreparedStatement pstm = conn.prepareStatement(sql);
+            pstm.execute();
+            JOptionPane.showMessageDialog(this, "Data berhasil di perbaharui", "INFORMASI", JOptionPane.INFORMATION_MESSAGE);
+        }catch(SQLException e){
+            System.out.println("Terjadi masalah saat eksekusi Query: " + e);
+        }
+        
+    }//GEN-LAST:event_rSMaterialButtonRectangle2ActionPerformed
+
+    private void tableDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableDataMouseClicked
+        int row = tableData.rowAtPoint(evt.getPoint());
+        String kode = tableData.getValueAt(row, 0).toString();
+        txtKode.setText(kode);
+        
+        String tipe = tableData.getValueAt(row, 1).toString();
+        selectTipe.setSelectedItem(tipe);
+        
+        String kelas = tableData.getValueAt(row, 2).toString();
+        selectKelas.setSelectedItem(kelas);
+        
+        String nama = tableData.getValueAt(row, 3).toString();
+        txtNama.setText(nama);
+        
+        String harga = tableData.getValueAt(row, 4).toString();
+        txtHarga.setText(harga);
+    }//GEN-LAST:event_tableDataMouseClicked
+
+    private void rSMaterialButtonRectangle4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSMaterialButtonRectangle4ActionPerformed
+        try{
+            String sql = "DELETE FROM kamar WHERE kode = '"+txtKode.getText()+"'";
+            Connection conn = Config.configDB();
+            PreparedStatement pstm = conn.prepareStatement(sql);
+            pstm.execute();
+            JOptionPane.showMessageDialog(this, "Data kamar berhasil dihapus", "INFORMASI", JOptionPane.INFORMATION_MESSAGE);
+        }catch(SQLException e){
+            System.out.println("Terjadi error saat menghapus data : " + e);
+        }
+    }//GEN-LAST:event_rSMaterialButtonRectangle4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -302,10 +520,16 @@ public class admin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lblJKamar;
+    private javax.swing.JLabel lblJUser;
     private javax.swing.JLabel lblUser;
     private rojerusan.RSMaterialButtonRectangle rSMaterialButtonRectangle1;
     private rojerusan.RSMaterialButtonRectangle rSMaterialButtonRectangle2;

@@ -72,6 +72,11 @@ public class Home extends javax.swing.JFrame {
 
         rSMaterialButtonRectangle1.setText("Login");
         rSMaterialButtonRectangle1.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 14)); // NOI18N
+        rSMaterialButtonRectangle1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rSMaterialButtonRectangle1ActionPerformed(evt);
+            }
+        });
 
         rSMaterialButtonRectangle2.setText("Register");
         rSMaterialButtonRectangle2.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 14)); // NOI18N
@@ -135,8 +140,14 @@ public class Home extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void rSMaterialButtonRectangle2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSMaterialButtonRectangle2ActionPerformed
-        // TODO add your handling code here:
+        this.dispose();
+        new Register().setVisible(true);
     }//GEN-LAST:event_rSMaterialButtonRectangle2ActionPerformed
+
+    private void rSMaterialButtonRectangle1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSMaterialButtonRectangle1ActionPerformed
+        this.dispose();
+        new Login().setVisible(true);
+    }//GEN-LAST:event_rSMaterialButtonRectangle1ActionPerformed
 
     /**
      * @param args the command line arguments
