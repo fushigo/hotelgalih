@@ -242,13 +242,14 @@ public class Login extends javax.swing.JFrame {
                 ResultSet resultSet = pstm.executeQuery();
                 if (resultSet.next()) {
                     String userLevel = resultSet.getString("level");
+                    int idUser = resultSet.getInt("id_user");
                     if ("admin".equals(userLevel)) {
                         this.dispose();
                         admin adm = new admin(username, userLevel);
                         adm.setVisible(true);
                     } else if ("user".equals(userLevel)) {
                         this.dispose();
-                        user usr = new user(username, userLevel);
+                        user usr = new user(username, userLevel, idUser);
                         usr.setVisible(true);
                     }
                 } else {
