@@ -32,6 +32,7 @@ public class admin extends javax.swing.JFrame {
      */
     public admin(String username, String userLevel) {
         initComponents();
+        setLocationRelativeTo(null);
         this.username = username;
         this.userLevel = userLevel;
     }

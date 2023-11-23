@@ -36,6 +36,7 @@ public class user extends javax.swing.JFrame {
      */
     public user(String username, String userLevel, int idUser) {
         initComponents();
+        setLocationRelativeTo(null);
         this.username = username;
         this.userlevel = userLevel;
         this.iduser = idUser;
@@ -99,6 +100,7 @@ public class user extends javax.swing.JFrame {
 
             // Tambahkan logika lain jika diperlukan
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Kamar telah di pesan", "INFORMASI", JOptionPane.INFORMATION_MESSAGE);
             System.out.println("Terjadi masalah saat memasukkan data pemesanan: " + e);
         }
     }
