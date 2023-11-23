@@ -14,6 +14,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -145,27 +148,45 @@ public class user extends javax.swing.JFrame {
             }
         }
         txtTotal.setText(String.valueOf(total));
+        lblTotalHarga.setText("IDR " + String.valueOf(total));
     }
-    
-    public void createInvoice(){
+
+    public void createInvoice() {
         DefaultTableModel tblModel = new DefaultTableModel();
         tblModel.addColumn("");
         tblModel.addColumn("");
         tblModel.addColumn("");
         tblModel.addColumn("");
         tblModel.addColumn("");
-        
-        int no = 1;
-        String kode = "#INV" + no;
-        no++;
-        
-        String kodeKamar = tablePesanan.getValueAt(1, 1).toString();
-        int row = tablePesanan.getRowCount();
-        for(int i = 0; i < row; i++){
-           
+
+        try {
+
+            Date sekarang = new Date();
+            DateFormat tgl = new SimpleDateFormat("dd/MM/yyyy");
+            String tanggal = tgl.format(sekarang);
+            DateFormat inv = new SimpleDateFormat("ddMMyyyy");
+            String tglinv = inv.format(sekarang);
+            lblDate.setText(tanggal);
+            String id = "#INV" + Integer.parseInt(tglinv) + String.valueOf(iduser);
+            invoiceNo.setText(id);
+
+            int no = 1;
+            String sql = "SELECT kode, nama, kelas, jenis, harga FROM pemesanan WHERE id_user = ?";
+            java.sql.Connection conn = (Connection) Config.configDB();
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setInt(1, iduser);
+            java.sql.ResultSet res = stm.executeQuery();
+
+            while (res.next()) {
+                System.out.println("halo");
+                tblModel.addRow(new Object[]{res.getString(1), res.getString(2),
+                    res.getString(3), res.getString(4), res.getString(5)});
+            }
+            tableInvoice.setModel(tblModel);
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
         }
-        System.out.println(row);
-        
+
     }
 
     /**
@@ -220,6 +241,9 @@ public class user extends javax.swing.JFrame {
         jScrollPane7 = new javax.swing.JScrollPane();
         tableInvoice = new javax.swing.JTable();
         jLabel20 = new javax.swing.JLabel();
+        lblTotalHarga = new javax.swing.JLabel();
+        invoiceNo = new javax.swing.JLabel();
+        lblDate = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         txtUsername = new javax.swing.JLabel();
@@ -304,7 +328,7 @@ public class user extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Lama Booking");
+        jLabel1.setText("Lama Booking (dalam hari)");
 
         txtLama.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -362,7 +386,7 @@ public class user extends javax.swing.JFrame {
                             .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)))
                     .addComponent(rSMaterialButtonRectangle2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(91, Short.MAX_VALUE))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -405,9 +429,9 @@ public class user extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 24)); // NOI18N
         jLabel6.setText("INVOICE");
 
-        lblNoInvoice.setText("Invoice No : 008");
+        lblNoInvoice.setText("Invoice No :");
 
-        jLabel9.setText("Date : 27 October,2025");
+        jLabel9.setText("Date :");
 
         jLabel10.setForeground(new java.awt.Color(153, 153, 153));
         jLabel10.setText("_________________________________________________________________________");
@@ -426,7 +450,7 @@ public class user extends javax.swing.JFrame {
         jLabel16.setForeground(new java.awt.Color(153, 153, 153));
         jLabel16.setText("_________________________________________________________________________");
 
-        jLabel17.setText("Total");
+        jLabel17.setText("Total : ");
 
         jLabel18.setText("_________________________________________________________________________");
 
@@ -446,6 +470,8 @@ public class user extends javax.swing.JFrame {
 
         jLabel20.setText("Harga");
 
+        invoiceNo.setText("#INV");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -457,27 +483,15 @@ public class user extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel4)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel5)))
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addComponent(jLabel9)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(lblDate))
+                                .addComponent(jLabel5))))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
                         .addGap(57, 57, 57)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(lblNoInvoice)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel9))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel10)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel15)
-                                    .addComponent(jLabel16)
-                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(jPanel4Layout.createSequentialGroup()
-                                            .addGap(24, 24, 24)
-                                            .addComponent(jLabel19)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel11)
@@ -489,12 +503,31 @@ public class user extends javax.swing.JFrame {
                                 .addComponent(jLabel14)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel20)
-                                .addGap(30, 30, 30)))))
+                                .addGap(30, 30, 30))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addComponent(lblNoInvoice)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(invoiceNo))
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel15)
+                                    .addComponent(jLabel16)
+                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(jPanel4Layout.createSequentialGroup()
+                                            .addGap(24, 24, 24)
+                                            .addComponent(jLabel19)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addGap(57, 57, 57))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel17)
-                .addGap(130, 130, 130))
+                .addGap(18, 18, 18)
+                .addComponent(lblTotalHarga)
+                .addGap(78, 78, 78))
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel4Layout.createSequentialGroup()
                     .addGap(58, 58, 58)
@@ -515,11 +548,13 @@ public class user extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNoInvoice)
-                    .addComponent(jLabel9))
+                    .addComponent(jLabel9)
+                    .addComponent(invoiceNo)
+                    .addComponent(lblDate))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel11)
                     .addComponent(jLabel12)
                     .addComponent(jLabel13)
@@ -530,7 +565,9 @@ public class user extends javax.swing.JFrame {
                 .addGap(137, 137, 137)
                 .addComponent(jLabel16)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel17)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(lblTotalHarga))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
                 .addComponent(jLabel18)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -669,8 +706,17 @@ public class user extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTotalActionPerformed
 
     private void rSMaterialButtonRectangle2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSMaterialButtonRectangle2ActionPerformed
-        totalHarga();
-        createInvoice();
+
+        if (txtLama.getText().equals("") || txtLama.equals(null)) {
+            txtLama.requestFocus();
+            JOptionPane.showMessageDialog(this, "Harap mengisi jumlah lama menyewa terlebih dahulu", "INFORMASI", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Invoice berhasil dibuat, silahkan check pada Tab Invoice", "INFORMASI", JOptionPane.INFORMATION_MESSAGE);
+            totalHarga();
+            createInvoice();
+        }
+
+
     }//GEN-LAST:event_rSMaterialButtonRectangle2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -715,6 +761,7 @@ public class user extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel invoiceNo;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -747,7 +794,9 @@ public class user extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblNoInvoice;
+    private javax.swing.JLabel lblTotalHarga;
     private rojerusan.RSMaterialButtonRectangle rSMaterialButtonRectangle1;
     private rojerusan.RSMaterialButtonRectangle rSMaterialButtonRectangle2;
     private javax.swing.JPanel showPanel;
