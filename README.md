@@ -1,5 +1,5 @@
 ## INFORMATION
-***Project ini merupakan sebuah aplikasi desktop yang dibuat menggunakan [JPanelForm] & [JFrameForm] Contributors [fushigo](https://github.com/fushigo) & [galihfaajar](https://github.com/galihfaajar)***
+***Project ini merupakan sebuah aplikasi desktop yang dibuat menggunakan Java dan Netbeans.  Contributors [fushigo](https://github.com/fushigo) & [galihfaajar](https://github.com/galihfaajar)***
 
 ## Getting Started
 
